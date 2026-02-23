@@ -1,0 +1,6 @@
+{
+    "python-envs.pythonProjects": [],
+    "python.defaultInterpreterPath": "${workspaceFolder}",
+    "python.analysis.extraPaths": ["."],
+    "python.linting.enabled": true
+}
