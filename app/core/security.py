@@ -17,7 +17,7 @@ def create_access_token(user):
 
     to_encode = {
         "sub": user.email,
-        "role": user.role.value,
+        "role": user.role_id,
         "type": "access",
         "exp": expire
     }
@@ -29,7 +29,7 @@ def create_refresh_token(user):
 
     payload = {
         "sub": user.email,
-        "role": user.role.value,
+        "role": user.role_id,
         "type": "refresh",
         "exp": expire
     }

@@ -7,6 +7,8 @@ class UserCreate(BaseModel):
     phone: str
     email: EmailStr
     password: str
+    role_id: str
+
     @field_validator("password")
     @classmethod
     def validate_password(cls, v):

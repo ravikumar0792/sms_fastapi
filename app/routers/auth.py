@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app import db
 from app.schemas.user import UserCreate, UserOut
 from app.models.user import User
+from app.models.role import Role
 from app.db.deps import get_db
 from app.core.security import hash_password
 from fastapi.security import OAuth2PasswordRequestForm
@@ -24,6 +25,12 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.email == user.email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
+    db_role = db.query(Role).filter(Role.name == User.role_id).first()
+    if not db_role:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Role '{user.role_id}' does not exist."
+        )
     token = secrets.token_urlsafe(32)
     expiry = datetime.utcnow() + timedelta(hours=24)
 
@@ -33,7 +40,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
         phone=user.phone,
         email=user.email,
         hashed_password=hash_password(user.password),
-        role="user",
+        role=db_role,
         verification_token=token,
         verification_token_expiry=expiry,
         is_verified=False
@@ -108,7 +115,7 @@ def login(
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
-        "role": user.role.value
+        "role": user.role_id
     }
 
 @router.post("/refresh")
