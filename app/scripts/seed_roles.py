@@ -8,6 +8,7 @@ def seed():
     db = SessionLocal()
     try:
         # 1. Create Permissions
+        create_role = Permission(name="create_role")
         create_user = Permission(name="create_user")
         delete_user = Permission(name="delete_user")
         view_profile = Permission(name="view_profile")

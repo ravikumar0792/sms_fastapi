@@ -10,7 +10,9 @@ def require_permission(permission_name: str):
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="No role assigned"
             )
-
+        if current_user.role.name == "superadmin":
+            return current_user
+        
         user_permissions = [p.name for p in current_user.role.permissions]
 
         if permission_name not in user_permissions:
